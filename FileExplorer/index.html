@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Explorer - Recursive vs Iterative Traversal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-folder-tree"></i>
+                    <h1>File Explorer Traversal</h1>
+                </div>
+                <div class="header-subtitle">
+                    Compare Recursive vs Iterative Tree Traversal Algorithms
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="algorithm-selector">
+                    <button id="recursiveBtn" class="algorithm-btn active" data-algorithm="recursive">
+                        <i class="fas fa-code-branch"></i>
+                        Recursive Traversal
+                    </button>
+                    <button id="iterativeBtn" class="algorithm-btn" data-algorithm="iterative">
+                        <i class="fas fa-layer-group"></i>
+                        Iterative Traversal
+                    </button>
+                </div>
+                
+                <div class="controls">
+                    <button id="startBtn" class="control-btn primary">
+                        <i class="fas fa-play"></i>
+                        Start Traversal
+                    </button>
+                    <button id="pauseBtn" class="control-btn secondary" disabled>
+                        <i class="fas fa-pause"></i>
+                        Pause
+                    </button>
+                    <button id="resetBtn" class="control-btn tertiary">
+                        <i class="fas fa-refresh"></i>
+                        Reset
+                    </button>
+                </div>
+
+                <div class="speed-control">
+                    <label for="speedSlider">Speed:</label>
+                    <input type="range" id="speedSlider" min="100" max="2000" value="800" step="100">
+                    <span id="speedValue">800ms</span>
+                </div>
+            </div>
+
+            <!-- Main Grid -->
+            <div class="main-grid">
+                <!-- File Tree Visualization -->
+                <div class="panel tree-panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-sitemap"></i> File System Tree</h3>
+                        <div class="traversal-info">
+                            <span id="currentAlgorithm">Recursive</span>
+                            <div class="status-indicator" id="statusIndicator">Ready</div>
+                        </div>
+                    </div>
+                    <div class="panel-content">
+                        <div id="fileTree" class="file-tree"></div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-color visited"></div>
+                                <span>Visited</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color current"></div>
+                                <span>Current</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color pending"></div>
+                                <span>Pending</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Execution Visualizer -->
+                <div class="panel execution-panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-cogs"></i> Execution Visualizer</h3>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div id="progressFill" class="progress-fill"></div>
+                            </div>
+                            <span id="progressText">0 / 0</span>
+                        </div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="execution-details">
+                            <div class="current-step" id="currentStep">
+                                <h4>Current Step</h4>
+                                <div class="step-info" id="stepInfo">
+                                    Select an algorithm and click Start to begin
+                                </div>
+                            </div>
+                            
+                            <div class="stack-visualization" id="stackVisualization">
+                                <h4>Stack/Call Stack</h4>
+                                <div class="stack-container" id="stackContainer">
+                                    <div class="empty-state">No active calls</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="execution-log" id="executionLog">
+                            <h4>Execution Log</h4>
+                            <div class="log-container" id="logContainer">
+                                <div class="empty-state">Execution log will appear here</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Metrics -->
+                <div class="panel metrics-panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-chart-line"></i> Performance Metrics</h3>
+                    </div>
+                    <div class="panel-content">
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="metric-info">
+                                    <div class="metric-label">Execution Time</div>
+                                    <div class="metric-value" id="executionTime">0ms</div>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-card">
+                                <div class="metric-icon">
+                                    <i class="fas fa-list-ol"></i>
+                                </div>
+                                <div class="metric-info">
+                                    <div class="metric-label">Total Steps</div>
+                                    <div class="metric-value" id="totalSteps">0</div>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-card">
+                                <div class="metric-icon">
+                                    <i class="fas fa-layer-group"></i>
+                                </div>
+                                <div class="metric-info">
+                                    <div class="metric-label">Max Depth</div>
+                                    <div class="metric-value" id="maxDepth">0</div>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-card">
+                                <div class="metric-icon">
+                                    <i class="fas fa-memory"></i>
+                                </div>
+                                <div class="metric-info">
+                                    <div class="metric-label">Memory Usage</div>
+                                    <div class="metric-value" id="memoryUsage">0 calls</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="comparison-section" id="comparisonSection">
+                            <h4>Algorithm Comparison</h4>
+                            <div class="comparison-table">
+                                <div class="comparison-row header">
+                                    <div>Aspect</div>
+                                    <div>Recursive</div>
+                                    <div>Iterative</div>
+                                </div>
+                                <div class="comparison-row">
+                                    <div>Code Simplicity</div>
+                                    <div class="advantage">Excellent</div>
+                                    <div>Good</div>
+                                </div>
+                                <div class="comparison-row">
+                                    <div>Memory Usage</div>
+                                    <div>Higher</div>
+                                    <div class="advantage">Lower</div>
+                                </div>
+                                <div class="comparison-row">
+                                    <div>Stack Overflow Risk</div>
+                                    <div class="disadvantage">High</div>
+                                    <div class="advantage">Low</div>
+                                </div>
+                                <div class="comparison-row">
+                                    <div>Performance</div>
+                                    <div>Good</div>
+                                    <div class="advantage">Better</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Code Comparison -->
+                <div class="panel code-panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-code"></i> Code Implementation</h3>
+                        <div class="code-tabs">
+                            <button class="code-tab active" data-tab="recursive">Recursive</button>
+                            <button class="code-tab" data-tab="iterative">Iterative</button>
+                        </div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="code-container">
+                            <div id="recursiveCode" class="code-block active">
+                                <pre><code class="javascript">function traverseRecursive(node, callback, depth = 0) {
+    // Visit current node
+    callback(node, depth, 'visit');
+    
+    // Process children recursively
+    if (node.children && node.children.length > 0) {
+        for (let i = 0; i < node.children.length; i++) {
+            const child = node.children[i];
+            callback(child, depth + 1, 'recurse');
+            
+            // Recursive call - function calls itself
+            traverseRecursive(child, callback, depth + 1);
+            
+            callback(child, depth + 1, 'return');
+        }
+    }
+    
+    callback(node, depth, 'complete');
+}
+
+// Usage
+traverseRecursive(rootNode, (node, depth, action) => {
+    console.log(`${action}: ${node.name} at depth ${depth}`);
+});</code></pre>
+                            </div>
+                            
+                            <div id="iterativeCode" class="code-block">
+                                <pre><code class="javascript">function traverseIterative(root, callback) {
+    // Use explicit stack to simulate recursion
+    const stack = [{ node: root, depth: 0, action: 'visit' }];
+    
+    while (stack.length > 0) {
+        const { node, depth, action } = stack.pop();
+        
+        // Process current item
+        callback(node, depth, action);
+        
+        // Add children to stack in reverse order
+        // (to maintain left-to-right traversal)
+        if (node.children && node.children.length > 0) {
+            // Add completion marker first
+            stack.push({ node, depth, action: 'complete' });
+            
+            // Add children in reverse order
+            for (let i = node.children.length - 1; i >= 0; i--) {
+                const child = node.children[i];
+                stack.push({ node: child, depth: depth + 1, action: 'return' });
+                stack.push({ node: child, depth: depth + 1, action: 'visit' });
+            }
+        }
+    }
+}
+
+// Usage
+traverseIterative(rootNode, (node, depth, action) => {
+    console.log(`${action}: ${node.name} at depth ${depth}`);
+});</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="code-explanation">
+                            <div id="recursiveExplanation" class="explanation active">
+                                <h4>Recursive Approach</h4>
+                                <ul>
+                                    <li><strong>Natural:</strong> Mirrors the tree structure naturally</li>
+                                    <li><strong>Simple:</strong> Clean, readable code with automatic backtracking</li>
+                                    <li><strong>Call Stack:</strong> Uses system call stack for state management</li>
+                                    <li><strong>Risk:</strong> Stack overflow for very deep trees</li>
+                                </ul>
+                            </div>
+                            
+                            <div id="iterativeExplanation" class="explanation">
+                                <h4>Iterative Approach</h4>
+                                <ul>
+                                    <li><strong>Explicit Stack:</strong> Manual stack management for control</li>
+                                    <li><strong>Memory Safe:</strong> No stack overflow risk</li>
+                                    <li><strong>Performance:</strong> Better for deep trees and large datasets</li>
+                                    <li><strong>Complexity:</strong> More complex code but predictable behavior</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
