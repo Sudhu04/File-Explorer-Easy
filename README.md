@@ -5,7 +5,7 @@ Users can visualize how traversal algorithms work, compare performance metrics, 
 
 ## 🚀 Live Demo
 
-👉 [View Project on GitHub Pages](https://sudhu04.github.io/file-explorer-traversal/)
+👉 [View Project on GitHub Pages](https://github.com/Sudhu04/File-Explorer-Easy/blob/main/FileExplorer/index.html)
 *(The link will work after you deploy via GitHub Pages — see instructions below.)*
 
 ---
