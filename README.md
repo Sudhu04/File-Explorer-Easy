@@ -5,7 +5,7 @@ Users can visualize how traversal algorithms work, compare performance metrics, 
 
 ## 🚀 Live Demo
 
-👉 [View Project on GitHub Pages](https://codesandbox.io/p/sandbox/github/Sudhu04/File-Explorer-Easy/tree/main/FileExplorer?file=%2Findex.html)
+👉 [View Project on GitHub Sandbox](https://codesandbox.io/p/sandbox/github/Sudhu04/File-Explorer-Easy/tree/main/FileExplorer?file=%2Findex.html)
 *(The link will work after you deploy via GitHub Pages — see instructions below.)*
 
 ---
